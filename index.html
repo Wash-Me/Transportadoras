@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de ProspecÁ„o de Transportadoras - Ambev</title>
+    <title>Painel de Prospec√ß√£o de Transportadoras - Ambev</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -77,13 +77,13 @@
     <div class="container mx-auto p-4 md:p-8">
 
         <header class="text-center mb-8">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Painel de ProspecÁ„o de Transportadoras</h1>
-            <p class="text-lg text-gray-600 mt-2">Plataforma Din‚mica de Parceiros LogÌsticos para a Rede Ambev</p>
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Painel de Prospec√ß√£o de Transportadoras</h1>
+            <p class="text-lg text-gray-600 mt-2">Plataforma Din√¢mica de Parceiros Log√≠sticos para a Rede Ambev</p>
         </header>
 
         <div class="card p-6 mb-8">
-            <h2 class="text-xl font-semibold mb-4 text-gray-700">Expandir ProspecÁ„o</h2>
-            <p class="text-gray-600 mb-4">Adicione uma localidade para pesquisar transportadoras usando IA. <strong class="text-red-600">AtenÁ„o:</strong> os dados adicionados s„o tempor·rios e ser„o perdidos ao recarregar a p·gina.</p>
+            <h2 class="text-xl font-semibold mb-4 text-gray-700">Expandir Prospec√ß√£o</h2>
+            <p class="text-gray-600 mb-4">Adicione uma localidade para pesquisar transportadoras usando IA. <strong class="text-red-600">Aten√ß√£o:</strong> os dados adicionados s√£o tempor√°rios e ser√£o perdidos ao recarregar a p√°gina.</p>
             <form id="addUnitForm" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                 <div class="md:col-span-2">
                     <label for="newUnitState" class="block mb-2 text-sm font-medium text-gray-900">Estado</label>
@@ -91,15 +91,15 @@
                 </div>
                 <div class="md:col-span-2">
                     <label for="newUnitCity" class="block mb-2 text-sm font-medium text-gray-900">Cidade</label>
-                    <input type="text" id="newUnitCity" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Ex: Jaguari˙na" required>
+                    <input type="text" id="newUnitCity" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Ex: Jaguari√∫na" required>
                 </div>
                 <div class="md:col-span-4">
-                     <label for="newUnitAddress" class="block mb-2 text-sm font-medium text-gray-900">EndereÁo de ReferÍncia (Opcional)</label>
-                    <input type="text" id="newUnitAddress" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Um endereÁo para refinar a busca local">
+                     <label for="newUnitAddress" class="block mb-2 text-sm font-medium text-gray-900">Endere√ßo de Refer√™ncia (Opcional)</label>
+                    <input type="text" id="newUnitAddress" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Um endere√ßo para refinar a busca local">
                 </div>
                 <div class="md:col-span-4">
                     <button type="submit" class="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 transition duration-300 flex items-center justify-center">
-                        <span id="addUnitBtnText">Buscar Transportadoras com IA ?</span>
+                        <span id="addUnitBtnText">Buscar Transportadoras com IA ‚ú®</span>
                         <div id="addUnitLoader" class="loader w-6 h-6 border-2 border-t-green-500 hidden"></div>
                     </button>
                 </div>
@@ -111,7 +111,7 @@
             <h2 class="text-xl font-semibold mb-4 text-gray-700">Filtros de Pesquisa</h2>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <select id="regionFilter" class="custom-select w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    <option value="">Selecione uma Regi„o</option>
+                    <option value="">Selecione uma Regi√£o</option>
                 </select>
                 <select id="stateFilter" class="custom-select w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" disabled>
                     <option value="">Selecione um Estado</option>
@@ -139,7 +139,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.125-.504 1.125-1.125V14.25m-17.25 4.5v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H3.375m17.25 14.25v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H3.375m1.5-1.5h12.75a1.125 1.125 0 011.125 1.125v1.5a3.375 3.375 0 003.375 3.375h1.5a1.125 1.125 0 011.125 1.125v1.875m-17.25-14.25h12.75a1.125 1.125 0 011.125 1.125v1.5a3.375 3.375 0 003.375 3.375h1.5a1.125 1.125 0 011.125 1.125v1.875" />
                     </svg>
                     <h3 class="text-xl font-semibold text-gray-500">Selecione uma unidade para ver os detalhes</h3>
-                    <p class="text-gray-400 mt-2">Use os filtros acima para encontrar informaÁıes sobre an·lises de mercado e potenciais parceiros logÌsticos.</p>
+                    <p class="text-gray-400 mt-2">Use os filtros acima para encontrar informa√ß√µes sobre an√°lises de mercado e potenciais parceiros log√≠sticos.</p>
                 </div>
             </div>
         </main>
@@ -173,25 +173,25 @@
     <script>
         let data = {
             units: [
-                { id: 'vr', name: 'CDD VOLTA REDONDA', city: 'Volta Redonda', state: 'RJ', region: 'Sudeste', address: 'RUA LUCIO MEIRA, BR-393, 13550 - Dom Bosco', analysis: 'Volta Redonda, como polo industrial, possui um ecossistema logÌstico robusto. A proximidade com a BR-393 È um fator estratÈgico, atraindo transportadoras com frota pesada e capacidade para longas dist‚ncias. O desafio È encontrar parceiros com flexibilidade para distribuiÁ„o capilar na regi„o.', suppliers: [
-                    { name: 'TransVR LogÌstica', address: 'Rod. dos Metal˙rgicos, 8760', phone: '(24) 3345-1234', profile: 'Frota diversificada com VUCs e Trucks. AtuaÁ„o regional forte no Sul Fluminense. Possui registro ANTT.' },
-                    { name: 'Log-Rio Cargas e Encomendas', address: 'Av. Adalberto de Barros Nunes, 120', phone: '(24) 3348-5678', profile: 'Especializada em carga fracionada. Ideal para distribuiÁ„o urbana e entregas B2B.' },
-                    { name: '¡guia Sul Transportes', address: 'Rua C, 45, Polo Industrial', phone: '(24) 2102-9988', profile: 'Foco em carga lotaÁ„o para o eixo Rio-S„o Paulo. Frota de carretas.' },
+                { id: 'vr', name: 'CDD VOLTA REDONDA', city: 'Volta Redonda', state: 'RJ', region: 'Sudeste', address: 'RUA LUCIO MEIRA, BR-393, 13550 - Dom Bosco', analysis: 'Volta Redonda, como polo industrial, possui um ecossistema log√≠stico robusto. A proximidade com a BR-393 √© um fator estrat√©gico, atraindo transportadoras com frota pesada e capacidade para longas dist√¢ncias. O desafio √© encontrar parceiros com flexibilidade para distribui√ß√£o capilar na regi√£o.', suppliers: [
+                    { name: 'TransVR Log√≠stica', address: 'Rod. dos Metal√∫rgicos, 8760', phone: '(24) 3345-1234', profile: 'Frota diversificada com VUCs e Trucks. Atua√ß√£o regional forte no Sul Fluminense. Possui registro ANTT.' },
+                    { name: 'Log-Rio Cargas e Encomendas', address: 'Av. Adalberto de Barros Nunes, 120', phone: '(24) 3348-5678', profile: 'Especializada em carga fracionada. Ideal para distribui√ß√£o urbana e entregas B2B.' },
+                    { name: '√Åguia Sul Transportes', address: 'Rua C, 45, Polo Industrial', phone: '(24) 2102-9988', profile: 'Foco em carga lota√ß√£o para o eixo Rio-S√£o Paulo. Frota de carretas.' },
                 ]},
-                { id: 'jaguariuna', name: 'CDD JAGUARIUNA', city: 'Jaguari˙na', state: 'SP', region: 'Sudeste', address: 'Avenida Antarctica, n∫1800 - Fazenda Santa Ursula', analysis: 'Localizada no coraÁ„o de uma das regiıes mais ricas de SP, Jaguari˙na È um hub logÌstico. A competiÁ„o È alta, com muitas transportadoras de alta tecnologia. O foco deve ser encontrar parceiros que ofereÁam bom custo-benefÌcio e especializaÁ„o em bens de consumo.', suppliers: [
-                    { name: 'JAG Log Transportes', address: 'Rua JosÈ Alves Guedes, 1001', phone: '(19) 3867-0011', profile: 'Atende o setor de tecnologia e bens de consumo. Frota com rastreamento em tempo real.' },
-                    { name: 'RodoJagua Transportes Urgentes', address: 'Av. PacÌfico Moneda, 321', phone: '(19) 3837-2244', profile: 'Especializada em entregas expressas na regi„o metropolitana de Campinas.' },
-                    { name: 'Malha LogÌstica Sudeste', address: 'Rod. Admar de Barros, Km 120', phone: '(19) 3847-5000', profile: 'Grande operadora logÌstica com armazenagem e distribuiÁ„o nacional.' },
+                { id: 'jaguariuna', name: 'CDD JAGUARIUNA', city: 'Jaguari√∫na', state: 'SP', region: 'Sudeste', address: 'Avenida Antarctica, n¬∫1800 - Fazenda Santa Ursula', analysis: 'Localizada no cora√ß√£o de uma das regi√µes mais ricas de SP, Jaguari√∫na √© um hub log√≠stico. A competi√ß√£o √© alta, com muitas transportadoras de alta tecnologia. O foco deve ser encontrar parceiros que ofere√ßam bom custo-benef√≠cio e especializa√ß√£o em bens de consumo.', suppliers: [
+                    { name: 'JAG Log Transportes', address: 'Rua Jos√© Alves Guedes, 1001', phone: '(19) 3867-0011', profile: 'Atende o setor de tecnologia e bens de consumo. Frota com rastreamento em tempo real.' },
+                    { name: 'RodoJagua Transportes Urgentes', address: 'Av. Pac√≠fico Moneda, 321', phone: '(19) 3837-2244', profile: 'Especializada em entregas expressas na regi√£o metropolitana de Campinas.' },
+                    { name: 'Malha Log√≠stica Sudeste', address: 'Rod. Admar de Barros, Km 120', phone: '(19) 3847-5000', profile: 'Grande operadora log√≠stica com armazenagem e distribui√ß√£o nacional.' },
                 ]},
-                { id: 'joinville', name: 'CDD JOINVILLE', city: 'Joinville', state: 'SC', region: 'Sul', address: 'Rua Anamburgo 2500 - Vila Nova', analysis: 'Joinville È um polo industrial e logÌstico crucial para a regi„o Sul. A proximidade com portos e grandes rodovias (BR-101) atrai grandes players. A prospecÁ„o pode focar em empresas com experiÍncia no transporte de bebidas e alimentos, que demandam cuidados especÌficos.', suppliers: [
-                    { name: 'Transville Cargas', address: 'Rua Dona Francisca, 8300', phone: '(47) 3451-8800', profile: 'Uma das maiores da regi„o, com frota moderna e filiais no Sul e Sudeste.' },
-                    { name: 'Bauer Cargas', address: 'Rua dos SuÌÁos, 150', phone: '(47) 3432-4567', profile: 'Transportadora familiar com forte atuaÁ„o em SC e PR. Foco em carga lotaÁ„o.' },
-                    { name: 'LogJoin LogÌstica Integrada', address: 'Rua Hans Dieter Schmidt, 333', phone: '(47) 3026-9999', profile: 'Oferece soluÁıes de armazenagem e distribuiÁ„o. Frota adaptada para produtos paletizados.' },
+                { id: 'joinville', name: 'CDD JOINVILLE', city: 'Joinville', state: 'SC', region: 'Sul', address: 'Rua Anamburgo 2500 - Vila Nova', analysis: 'Joinville √© um polo industrial e log√≠stico crucial para a regi√£o Sul. A proximidade com portos e grandes rodovias (BR-101) atrai grandes players. A prospec√ß√£o pode focar em empresas com experi√™ncia no transporte de bebidas e alimentos, que demandam cuidados espec√≠ficos.', suppliers: [
+                    { name: 'Transville Cargas', address: 'Rua Dona Francisca, 8300', phone: '(47) 3451-8800', profile: 'Uma das maiores da regi√£o, com frota moderna e filiais no Sul e Sudeste.' },
+                    { name: 'Bauer Cargas', address: 'Rua dos Su√≠√ßos, 150', phone: '(47) 3432-4567', profile: 'Transportadora familiar com forte atua√ß√£o em SC e PR. Foco em carga lota√ß√£o.' },
+                    { name: 'LogJoin Log√≠stica Integrada', address: 'Rua Hans Dieter Schmidt, 333', phone: '(47) 3026-9999', profile: 'Oferece solu√ß√µes de armazenagem e distribui√ß√£o. Frota adaptada para produtos paletizados.' },
                 ]},
-                 { id: 'goiania', name: 'CDD GOI¬NIA', city: 'Goi‚nia', state: 'GO', region: 'Centro-Oeste', address: 'Av. D·rio Vieira Machado, 490 - Jardim Balne·rio Meia Ponte', analysis: 'Goi‚nia È o centro de distribuiÁ„o para o Centro-Oeste. A demanda È alta por transporte rodovi·rio para longas dist‚ncias, especialmente para o agronegÛcio e ind˙stria. Parceiros ideais teriam rotas consolidadas para o interior de GO, MT, e TO.', suppliers: [
-                    { name: 'Centro-Oeste Cargas', address: 'Av. Perimetral Norte, 7890', phone: '(62) 3290-1020', profile: 'Grande capilaridade no estado de Goi·s. Frota de trucks e carretas graneleiras.' },
-                    { name: 'R·pido Goyaz', address: 'Rua 90, 456, Setor Sul', phone: '(62) 3241-5060', profile: 'Especialista em carga fracionada para Goi‚nia e entorno. Possui VUCs para entregas urbanas.' },
-                    { name: 'TransGr„os Log', address: 'Anel Vi·rio, s/n', phone: '(62) 3582-4000', profile: 'Foco no agronegÛcio, mas possui estrutura para carga seca lotaÁ„o para todo o Brasil.' },
+                 { id: 'goiania', name: 'CDD GOI√ÇNIA', city: 'Goi√¢nia', state: 'GO', region: 'Centro-Oeste', address: 'Av. D√°rio Vieira Machado, 490 - Jardim Balne√°rio Meia Ponte', analysis: 'Goi√¢nia √© o centro de distribui√ß√£o para o Centro-Oeste. A demanda √© alta por transporte rodovi√°rio para longas dist√¢ncias, especialmente para o agroneg√≥cio e ind√∫stria. Parceiros ideais teriam rotas consolidadas para o interior de GO, MT, e TO.', suppliers: [
+                    { name: 'Centro-Oeste Cargas', address: 'Av. Perimetral Norte, 7890', phone: '(62) 3290-1020', profile: 'Grande capilaridade no estado de Goi√°s. Frota de trucks e carretas graneleiras.' },
+                    { name: 'R√°pido Goyaz', address: 'Rua 90, 456, Setor Sul', phone: '(62) 3241-5060', profile: 'Especialista em carga fracionada para Goi√¢nia e entorno. Possui VUCs para entregas urbanas.' },
+                    { name: 'TransGr√£os Log', address: 'Anel Vi√°rio, s/n', phone: '(62) 3582-4000', profile: 'Foco no agroneg√≥cio, mas possui estrutura para carga seca lota√ß√£o para todo o Brasil.' },
                 ]},
             ]
         };
@@ -226,7 +226,7 @@
 
             function populateRegions() {
                 const currentVal = regionFilter.value;
-                regionFilter.innerHTML = '<option value="">Selecione uma Regi„o</option>';
+                regionFilter.innerHTML = '<option value="">Selecione uma Regi√£o</option>';
                 const regions = [...new Set(data.units.map(unit => unit.region))];
                 regions.sort().forEach(region => {
                     const option = document.createElement('option');
@@ -288,32 +288,32 @@
                     <tr class="border-b hover:bg-gray-50">
                         <td class="p-3 font-medium text-gray-800">${s.name}</td>
                         <td class="p-3 text-gray-600">${s.address}</td>
-                        <td class="p-3 text-gray-600">${s.phone || 'N„o informado'}</td>
+                        <td class="p-3 text-gray-600">${s.phone || 'N√£o informado'}</td>
                         <td class="p-3 text-gray-600">${s.profile}</td>
                         <td class="p-3 text-center">
-                            <button data-supplier-index="${index}" class="generate-btn bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-1.5 rounded-full hover:bg-blue-200 transition-colors">Gerar Mensagem ?</button>
+                            <button data-supplier-index="${index}" class="generate-btn bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-1.5 rounded-full hover:bg-blue-200 transition-colors">Gerar Mensagem ‚ú®</button>
                         </td>
                     </tr>
                 `).join('');
 
                 unitDetailContainer.innerHTML = `
                     <h3>${unit.name} - ${unit.city}, ${unit.state}</h3>
-                    <p class="text-gray-500 mb-4 text-sm"><strong>EndereÁo de ReferÍncia:</strong> ${unit.address || 'N/A'}</p>
+                    <p class="text-gray-500 mb-4 text-sm"><strong>Endere√ßo de Refer√™ncia:</strong> ${unit.address || 'N/A'}</p>
                     
-                    <h4>An·lise do Mercado Local</h4>
+                    <h4>An√°lise do Mercado Local</h4>
                     <p class="text-gray-600 bg-blue-50 p-4 rounded-lg">${unit.analysis}</p>
 
-                    <h4>Potenciais Parceiros LogÌsticos</h4>
+                    <h4>Potenciais Parceiros Log√≠sticos</h4>
                     <input type="text" id="supplierSearch" placeholder="Buscar transportadora por nome..." class="w-full p-2 border border-gray-300 rounded-md mb-4">
                     <div class="overflow-x-auto">
                         <table id="supplierTable" class="w-full text-sm text-left">
                             <thead class="bg-gray-100 text-gray-600 uppercase">
                                 <tr>
                                     <th class="p-3">Nome</th>
-                                    <th class="p-3">EndereÁo</th>
+                                    <th class="p-3">Endere√ßo</th>
                                     <th class="p-3">Telefone</th>
-                                    <th class="p-3">Perfil de ServiÁo</th>
-                                    <th class="p-3 text-center">AÁıes</th>
+                                    <th class="p-3">Perfil de Servi√ßo</th>
+                                    <th class="p-3 text-center">A√ß√µes</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -325,9 +325,9 @@
                         <h4 class="mb-4">Adicionar Transportadora Manualmente</h4>
                         <form id="addSupplierForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <input type="text" id="newSupplierName" placeholder="Nome da Transportadora" class="w-full p-2 border border-gray-300 rounded-md" required>
-                            <input type="text" id="newSupplierAddress" placeholder="EndereÁo" class="w-full p-2 border border-gray-300 rounded-md" required>
+                            <input type="text" id="newSupplierAddress" placeholder="Endere√ßo" class="w-full p-2 border border-gray-300 rounded-md" required>
                             <input type="text" id="newSupplierPhone" placeholder="Telefone" class="w-full p-2 border border-gray-300 rounded-md">
-                            <textarea id="newSupplierProfile" placeholder="Perfil do ServiÁo (Ex: Frota, ¡rea de atuaÁ„o)" rows="2" class="md:col-span-2 w-full p-2 border border-gray-300 rounded-md" required></textarea>
+                            <textarea id="newSupplierProfile" placeholder="Perfil do Servi√ßo (Ex: Frota, √Årea de atua√ß√£o)" rows="2" class="md:col-span-2 w-full p-2 border border-gray-300 rounded-md" required></textarea>
                             <button type="submit" class="md:col-span-2 w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition duration-300">Adicionar Transportadora</button>
                         </form>
                     </div>
@@ -352,17 +352,17 @@
 
                 const newUnit = {
                     id: 'new_' + Date.now(),
-                    name: `ProspecÁ„o - ${city}, ${state}`,
+                    name: `Prospec√ß√£o - ${city}, ${state}`,
                     city: city,
                     state: state,
-                    region: 'ProspecÁ„o',
+                    region: 'Prospec√ß√£o',
                     address: address || 'N/A',
-                    analysis: `An·lise de mercado gerada por IA para ${city}, ${state}.`,
+                    analysis: `An√°lise de mercado gerada por IA para ${city}, ${state}.`,
                     suppliers: []
                 };
 
-                const addressContext = address ? `prÛximas ao endereÁo de referÍncia: ${address}` : '';
-                const prompt = `Encontre o m·ximo possÌvel de transportadoras e empresas de logÌstica na cidade de ${newUnit.city}, ${newUnit.state} ${addressContext}. Busque por uma lista abrangente, com pelo menos 15 empresas se possÌvel. DÍ preferÍncia para empresas que trabalham com carga fracionada ou carga lotaÁ„o. ForneÁa o nome, endereÁo, telefone e um breve perfil para cada uma, incluindo, se possÌvel, tipos de frota e se possui registro ANTT.`;
+                const addressContext = address ? `pr√≥ximas ao endere√ßo de refer√™ncia: ${address}` : '';
+                const prompt = `Encontre o m√°ximo poss√≠vel de transportadoras e empresas de log√≠stica na cidade de ${newUnit.city}, ${newUnit.state} ${addressContext}. Busque por uma lista abrangente, com pelo menos 15 empresas se poss√≠vel. D√™ prefer√™ncia para empresas que trabalham com carga fracionada ou carga lota√ß√£o. Forne√ßa o nome, endere√ßo, telefone e um breve perfil para cada uma, incluindo, se poss√≠vel, tipos de frota e se possui registro ANTT.`;
                 
                 const schema = {
                     type: "ARRAY",
@@ -384,16 +384,16 @@
                     
                     data.units.push(newUnit);
                     addUnitForm.reset();
-                    addUnitFeedback.textContent = `ProspecÁ„o em ${city} concluÌda com ${suppliersJson.length} transportadoras encontradas!`;
+                    addUnitFeedback.textContent = `Prospec√ß√£o em ${city} conclu√≠da com ${suppliersJson.length} transportadoras encontradas!`;
                     addUnitFeedback.className = 'text-green-600 mt-4';
                     
                     updateAll();
                     
                     // Auto-select the newly added item
-                    const prospectRegionOption = Array.from(regionFilter.options).find(opt => opt.value === 'ProspecÁ„o');
+                    const prospectRegionOption = Array.from(regionFilter.options).find(opt => opt.value === 'Prospec√ß√£o');
                     if (prospectRegionOption) {
-                        regionFilter.value = 'ProspecÁ„o';
-                        populateStates('ProspecÁ„o');
+                        regionFilter.value = 'Prospec√ß√£o';
+                        populateStates('Prospec√ß√£o');
                         stateFilter.value = newUnit.state;
                         populateUnits(newUnit.state);
                         unitFilter.value = newUnit.id;
@@ -416,7 +416,7 @@
                 const newSupplier = {
                     name: document.getElementById('newSupplierName').value,
                     address: document.getElementById('newSupplierAddress').value,
-                    phone: document.getElementById('newSupplierPhone').value || 'N„o informado',
+                    phone: document.getElementById('newSupplierPhone').value || 'N√£o informado',
                     profile: document.getElementById('newSupplierProfile').value
                 };
                 
@@ -437,7 +437,7 @@
                 
                 showModal();
                 
-                const prompt = `Gere uma mensagem de contato profissional, curta e amig·vel em portuguÍs do Brasil para iniciar uma parceria. Meu contexto: Eu trabalho para um projeto da Ambev. Empresa que estou contatando: ${supplier.name}. Nosso centro de distribuiÁ„o Ambev prÛximo a eles fica em ${currentUnit.city}. A mensagem deve ser um e-mail, comeÁando com "Prezados da ${supplier.name}," e terminando com "Atenciosamente,". O objetivo È apresentar a oportunidade de prestar serviÁos de transporte e logÌstica para a Ambev na regi„o. Mantenha o tom profissional, mas acessÌvel.`;
+                const prompt = `Gere uma mensagem de contato profissional, curta e amig√°vel em portugu√™s do Brasil para iniciar uma parceria. Meu contexto: Eu trabalho para um projeto da Ambev. Empresa que estou contatando: ${supplier.name}. Nosso centro de distribui√ß√£o Ambev pr√≥ximo a eles fica em ${currentUnit.city}. A mensagem deve ser um e-mail, come√ßando com "Prezados da ${supplier.name}," e terminando com "Atenciosamente,". O objetivo √© apresentar a oportunidade de prestar servi√ßos de transporte e log√≠stica para a Ambev na regi√£o. Mantenha o tom profissional, mas acess√≠vel.`;
                 
                 try {
                     const text = await callGeminiApi(prompt);
@@ -476,7 +476,7 @@
                 if (!response.ok) {
                     const errorBody = await response.text();
                     console.error("API Error Response:", errorBody);
-                    throw new Error(`A chamada ‡ API falhou com o status: ${response.status}`);
+                    throw new Error(`A chamada √† API falhou com o status: ${response.status}`);
                 }
 
                 const result = await response.json();
@@ -486,9 +486,9 @@
                     return jsonSchema ? JSON.parse(responseText) : responseText;
                 } else {
                     if (result.promptFeedback && result.promptFeedback.blockReason) {
-                        throw new Error(`O prompt foi bloqueado por seguranÁa: ${result.promptFeedback.blockReason}`);
+                        throw new Error(`O prompt foi bloqueado por seguran√ßa: ${result.promptFeedback.blockReason}`);
                     }
-                    throw new Error("A API retornou uma resposta vazia ou inv·lida.");
+                    throw new Error("A API retornou uma resposta vazia ou inv√°lida.");
                 }
             }
 
@@ -537,7 +537,7 @@
             function renderChart() {
                 const ctx = document.getElementById('suppliersByStateChart').getContext('2d');
                 const stateCounts = data.units.reduce((acc, unit) => {
-                    if (unit.region !== 'ProspecÁ„o') { // Exclude prospected items from chart until they are "saved"
+                    if (unit.region !== 'Prospec√ß√£o') { // Exclude prospected items from chart until they are "saved"
                        acc[unit.state] = (acc[unit.state] || 0) + (unit.suppliers ? unit.suppliers.length : 0);
                     }
                     return acc;
@@ -555,7 +555,7 @@
                     data: {
                         labels: sortedStates,
                         datasets: [{
-                            label: 'N∫ de Transportadoras',
+                            label: 'N¬∫ de Transportadoras',
                             data: sortedCounts,
                             backgroundColor: 'rgba(59, 130, 246, 0.7)',
                             borderColor: 'rgba(59, 130, 246, 1)',
@@ -622,3 +622,4 @@
     </script>
 </body>
 </html>
+
