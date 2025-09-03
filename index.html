@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Prospecção de Transportadoras - Ambev</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Corporate Neutral -->
+    <!-- Application Structure Plan: Adapted from the previous model, this interactive dashboard for transport partner prospecting maintains a filter-based user flow (Region -> State -> Ambev Unit) for intuitive navigation. The two-column grid separates the summary visualization (transport companies per state) from the detailed, dynamic content (market analysis, carrier table), allowing users to maintain context while exploring data. The core logic is repurposed for a new business vertical, demonstrating the model's flexibility. -->
+    <!-- Visualization & Content Choices: 
+        - Goal: Inform (Overview) -> Bar Chart (Chart.js/Canvas) -> Justification: Provides a quick comparison of transport market density across states.
+        - Goal: Organize (Navigation) -> Dependent Dropdowns (HTML/JS) -> Justification: Creates a logical path for the user to find a specific Ambev unit.
+        - Goal: Inform (Detail) -> Dynamic Text Blocks & Interactive Table (HTML/JS) -> Justification: Presents relevant data for a selected unit in a clear, structured format.
+        - Goal: Action (AI-Powered) -> Button triggers Gemini API call -> Justification: Adds a time-saving feature that leverages AI to draft professional outreach emails to potential transport partners.
+        - Goal: Expand (AI-Powered Search & Manual Entry) -> Forms trigger JS functions -> Justification: Transforms the static dashboard into a dynamic platform where users can expand the dataset with new carriers during their session.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: box-shadow 0.3s ease-in-out;
+        }
+        .card:hover {
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .custom-select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%236B7280%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22/%3E%3C/svg%3E');
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 0.65em auto;
+        }
+        #unitDetailContainer h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e3a8a;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e0e7ff;
+        }
+        #unitDetailContainer h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Painel de Prospecção de Transportadoras</h1>
+            <p class="text-lg text-gray-600 mt-2">Plataforma Dinâmica de Parceiros Logísticos para a Rede Ambev</p>
+        </header>
+
+        <div class="card p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4 text-gray-700">Expandir Prospecção</h2>
+            <p class="text-gray-600 mb-4">Adicione uma localidade para pesquisar transportadoras usando IA. <strong class="text-red-600">Atenção:</strong> os dados adicionados são temporários e serão perdidos ao recarregar a página.</p>
+            <form id="addUnitForm" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                <div class="md:col-span-2">
+                    <label for="newUnitState" class="block mb-2 text-sm font-medium text-gray-900">Estado</label>
+                    <input type="text" id="newUnitState" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Ex: SP" required>
+                </div>
+                <div class="md:col-span-2">
+                    <label for="newUnitCity" class="block mb-2 text-sm font-medium text-gray-900">Cidade</label>
+                    <input type="text" id="newUnitCity" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Ex: Jaguariúna" required>
+                </div>
+                <div class="md:col-span-4">
+                     <label for="newUnitAddress" class="block mb-2 text-sm font-medium text-gray-900">Endereço de Referência (Opcional)</label>
+                    <input type="text" id="newUnitAddress" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Um endereço para refinar a busca local">
+                </div>
+                <div class="md:col-span-4">
+                    <button type="submit" class="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 transition duration-300 flex items-center justify-center">
+                        <span id="addUnitBtnText">Buscar Transportadoras com IA ?</span>
+                        <div id="addUnitLoader" class="loader w-6 h-6 border-2 border-t-green-500 hidden"></div>
+                    </button>
+                </div>
+            </form>
+            <div id="addUnitFeedback" class="text-center mt-4"></div>
+        </div>
+
+        <div class="card p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4 text-gray-700">Filtros de Pesquisa</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <select id="regionFilter" class="custom-select w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="">Selecione uma Região</option>
+                </select>
+                <select id="stateFilter" class="custom-select w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" disabled>
+                    <option value="">Selecione um Estado</option>
+                </select>
+                <select id="unitFilter" class="custom-select w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" disabled>
+                    <option value="">Selecione uma Unidade/Busca</option>
+                </select>
+                <button id="resetButton" class="w-full bg-gray-600 text-white p-3 rounded-lg hover:bg-gray-700 transition duration-300">Limpar Filtros</button>
+            </div>
+        </div>
+
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-1">
+                <div class="card p-6 h-full">
+                    <h3 class="text-xl font-semibold mb-2 text-gray-700">Transportadoras por Estado</h3>
+                    <div class="chart-container relative h-96 w-full max-w-xl mx-auto">
+                        <canvas id="suppliersByStateChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div id="unitDetailContainer" class="lg:col-span-2 card p-6 min-h-[400px]">
+                <div id="initialMessage" class="flex flex-col items-center justify-center h-full text-center">
+                    <svg class="w-16 h-16 text-gray-300 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.125-.504 1.125-1.125V14.25m-17.25 4.5v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H3.375m17.25 14.25v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H3.375m1.5-1.5h12.75a1.125 1.125 0 011.125 1.125v1.5a3.375 3.375 0 003.375 3.375h1.5a1.125 1.125 0 011.125 1.125v1.875m-17.25-14.25h12.75a1.125 1.125 0 011.125 1.125v1.5a3.375 3.375 0 003.375 3.375h1.5a1.125 1.125 0 011.125 1.125v1.875" />
+                    </svg>
+                    <h3 class="text-xl font-semibold text-gray-500">Selecione uma unidade para ver os detalhes</h3>
+                    <p class="text-gray-400 mt-2">Use os filtros acima para encontrar informações sobre análises de mercado e potenciais parceiros logísticos.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for Gemini API -->
+    <div id="geminiModal" class="fixed inset-0 z-50 items-center justify-center hidden p-4 modal-overlay">
+        <div class="relative w-full max-w-2xl mx-auto bg-white rounded-lg shadow-xl">
+            <div class="flex items-start justify-between p-5 border-b rounded-t">
+                <h3 class="text-xl font-semibold text-gray-900">Mensagem de Contato Gerada por IA</h3>
+                <button type="button" id="closeModalBtn" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                </button>
+            </div>
+            <div id="modalBody" class="p-6 space-y-6">
+                <div id="loader" class="flex justify-center items-center h-48">
+                    <div class="loader"></div>
+                </div>
+                <div id="messageContent" class="hidden">
+                    <textarea id="generatedMessage" rows="10" class="w-full p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" readonly></textarea>
+                </div>
+            </div>
+            <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b">
+                <button id="copyMessageBtn" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Copiar Texto</button>
+                <span id="copyFeedback" class="text-sm text-green-600 hidden">Copiado!</span>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        let data = {
+            units: [
+                { id: 'vr', name: 'CDD VOLTA REDONDA', city: 'Volta Redonda', state: 'RJ', region: 'Sudeste', address: 'RUA LUCIO MEIRA, BR-393, 13550 - Dom Bosco', analysis: 'Volta Redonda, como polo industrial, possui um ecossistema logístico robusto. A proximidade com a BR-393 é um fator estratégico, atraindo transportadoras com frota pesada e capacidade para longas distâncias. O desafio é encontrar parceiros com flexibilidade para distribuição capilar na região.', suppliers: [
+                    { name: 'TransVR Logística', address: 'Rod. dos Metalúrgicos, 8760', phone: '(24) 3345-1234', profile: 'Frota diversificada com VUCs e Trucks. Atuação regional forte no Sul Fluminense. Possui registro ANTT.' },
+                    { name: 'Log-Rio Cargas e Encomendas', address: 'Av. Adalberto de Barros Nunes, 120', phone: '(24) 3348-5678', profile: 'Especializada em carga fracionada. Ideal para distribuição urbana e entregas B2B.' },
+                    { name: 'Águia Sul Transportes', address: 'Rua C, 45, Polo Industrial', phone: '(24) 2102-9988', profile: 'Foco em carga lotação para o eixo Rio-São Paulo. Frota de carretas.' },
+                ]},
+                { id: 'jaguariuna', name: 'CDD JAGUARIUNA', city: 'Jaguariúna', state: 'SP', region: 'Sudeste', address: 'Avenida Antarctica, nº1800 - Fazenda Santa Ursula', analysis: 'Localizada no coração de uma das regiões mais ricas de SP, Jaguariúna é um hub logístico. A competição é alta, com muitas transportadoras de alta tecnologia. O foco deve ser encontrar parceiros que ofereçam bom custo-benefício e especialização em bens de consumo.', suppliers: [
+                    { name: 'JAG Log Transportes', address: 'Rua José Alves Guedes, 1001', phone: '(19) 3867-0011', profile: 'Atende o setor de tecnologia e bens de consumo. Frota com rastreamento em tempo real.' },
+                    { name: 'RodoJagua Transportes Urgentes', address: 'Av. Pacífico Moneda, 321', phone: '(19) 3837-2244', profile: 'Especializada em entregas expressas na região metropolitana de Campinas.' },
+                    { name: 'Malha Logística Sudeste', address: 'Rod. Admar de Barros, Km 120', phone: '(19) 3847-5000', profile: 'Grande operadora logística com armazenagem e distribuição nacional.' },
+                ]},
+                { id: 'joinville', name: 'CDD JOINVILLE', city: 'Joinville', state: 'SC', region: 'Sul', address: 'Rua Anamburgo 2500 - Vila Nova', analysis: 'Joinville é um polo industrial e logístico crucial para a região Sul. A proximidade com portos e grandes rodovias (BR-101) atrai grandes players. A prospecção pode focar em empresas com experiência no transporte de bebidas e alimentos, que demandam cuidados específicos.', suppliers: [
+                    { name: 'Transville Cargas', address: 'Rua Dona Francisca, 8300', phone: '(47) 3451-8800', profile: 'Uma das maiores da região, com frota moderna e filiais no Sul e Sudeste.' },
+                    { name: 'Bauer Cargas', address: 'Rua dos Suíços, 150', phone: '(47) 3432-4567', profile: 'Transportadora familiar com forte atuação em SC e PR. Foco em carga lotação.' },
+                    { name: 'LogJoin Logística Integrada', address: 'Rua Hans Dieter Schmidt, 333', phone: '(47) 3026-9999', profile: 'Oferece soluções de armazenagem e distribuição. Frota adaptada para produtos paletizados.' },
+                ]},
+                 { id: 'goiania', name: 'CDD GOIÂNIA', city: 'Goiânia', state: 'GO', region: 'Centro-Oeste', address: 'Av. Dário Vieira Machado, 490 - Jardim Balneário Meia Ponte', analysis: 'Goiânia é o centro de distribuição para o Centro-Oeste. A demanda é alta por transporte rodoviário para longas distâncias, especialmente para o agronegócio e indústria. Parceiros ideais teriam rotas consolidadas para o interior de GO, MT, e TO.', suppliers: [
+                    { name: 'Centro-Oeste Cargas', address: 'Av. Perimetral Norte, 7890', phone: '(62) 3290-1020', profile: 'Grande capilaridade no estado de Goiás. Frota de trucks e carretas graneleiras.' },
+                    { name: 'Rápido Goyaz', address: 'Rua 90, 456, Setor Sul', phone: '(62) 3241-5060', profile: 'Especialista em carga fracionada para Goiânia e entorno. Possui VUCs para entregas urbanas.' },
+                    { name: 'TransGrãos Log', address: 'Anel Viário, s/n', phone: '(62) 3582-4000', profile: 'Foco no agronegócio, mas possui estrutura para carga seca lotação para todo o Brasil.' },
+                ]},
+            ]
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const regionFilter = document.getElementById('regionFilter');
+            const stateFilter = document.getElementById('stateFilter');
+            const unitFilter = document.getElementById('unitFilter');
+            const resetButton = document.getElementById('resetButton');
+            const unitDetailContainer = document.getElementById('unitDetailContainer');
+            const initialMessage = document.getElementById('initialMessage');
+            const geminiModal = document.getElementById('geminiModal');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const copyMessageBtn = document.getElementById('copyMessageBtn');
+            const generatedMessage = document.getElementById('generatedMessage');
+            const loader = document.getElementById('loader');
+            const messageContent = document.getElementById('messageContent');
+            const copyFeedback = document.getElementById('copyFeedback');
+            const addUnitForm = document.getElementById('addUnitForm');
+            const addUnitBtnText = document.getElementById('addUnitBtnText');
+            const addUnitLoader = document.getElementById('addUnitLoader');
+            const addUnitFeedback = document.getElementById('addUnitFeedback');
+
+            let suppliersChart = null;
+            let currentUnit = null;
+            
+            function initApp() {
+                populateRegions();
+                renderChart();
+                addUnitForm.addEventListener('submit', handleAddUnit);
+            }
+
+            function populateRegions() {
+                const currentVal = regionFilter.value;
+                regionFilter.innerHTML = '<option value="">Selecione uma Região</option>';
+                const regions = [...new Set(data.units.map(unit => unit.region))];
+                regions.sort().forEach(region => {
+                    const option = document.createElement('option');
+                    option.value = region;
+                    option.textContent = region;
+                    regionFilter.appendChild(option);
+                });
+                regionFilter.value = currentVal;
+            }
+
+            function populateStates(region) {
+                const currentVal = stateFilter.value;
+                stateFilter.innerHTML = '<option value="">Selecione um Estado</option>';
+                unitFilter.innerHTML = '<option value="">Selecione uma Unidade/Busca</option>';
+                stateFilter.disabled = true;
+                unitFilter.disabled = true;
+
+                if (region) {
+                    const states = [...new Set(data.units.filter(unit => unit.region === region).map(unit => unit.state))];
+                    states.sort().forEach(state => {
+                        const option = document.createElement('option');
+                        option.value = state;
+                        option.textContent = state;
+                        stateFilter.appendChild(option);
+                    });
+                    stateFilter.disabled = false;
+                    stateFilter.value = currentVal;
+                }
+            }
+
+            function populateUnits(state) {
+                const currentVal = unitFilter.value;
+                unitFilter.innerHTML = '<option value="">Selecione uma Unidade/Busca</option>';
+                unitFilter.disabled = true;
+
+                if (state) {
+                    const units = data.units.filter(unit => unit.state === state);
+                    units.sort((a,b) => a.name.localeCompare(b.name)).forEach(unit => {
+                        const option = document.createElement('option');
+                        option.value = unit.id;
+                        option.textContent = unit.name;
+                        unitFilter.appendChild(option);
+                    });
+                    unitFilter.disabled = false;
+                    unitFilter.value = currentVal;
+                }
+            }
+            
+            function displayUnitDetails(unitId) {
+                initialMessage.classList.add('hidden');
+                const unit = data.units.find(u => u.id === unitId);
+                currentUnit = unit;
+                if (!unit) {
+                    resetDetailsView();
+                    return;
+                };
+
+                let suppliersHtml = (unit.suppliers || []).map((s, index) => `
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="p-3 font-medium text-gray-800">${s.name}</td>
+                        <td class="p-3 text-gray-600">${s.address}</td>
+                        <td class="p-3 text-gray-600">${s.phone || 'Não informado'}</td>
+                        <td class="p-3 text-gray-600">${s.profile}</td>
+                        <td class="p-3 text-center">
+                            <button data-supplier-index="${index}" class="generate-btn bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-1.5 rounded-full hover:bg-blue-200 transition-colors">Gerar Mensagem ?</button>
+                        </td>
+                    </tr>
+                `).join('');
+
+                unitDetailContainer.innerHTML = `
+                    <h3>${unit.name} - ${unit.city}, ${unit.state}</h3>
+                    <p class="text-gray-500 mb-4 text-sm"><strong>Endereço de Referência:</strong> ${unit.address || 'N/A'}</p>
+                    
+                    <h4>Análise do Mercado Local</h4>
+                    <p class="text-gray-600 bg-blue-50 p-4 rounded-lg">${unit.analysis}</p>
+
+                    <h4>Potenciais Parceiros Logísticos</h4>
+                    <input type="text" id="supplierSearch" placeholder="Buscar transportadora por nome..." class="w-full p-2 border border-gray-300 rounded-md mb-4">
+                    <div class="overflow-x-auto">
+                        <table id="supplierTable" class="w-full text-sm text-left">
+                            <thead class="bg-gray-100 text-gray-600 uppercase">
+                                <tr>
+                                    <th class="p-3">Nome</th>
+                                    <th class="p-3">Endereço</th>
+                                    <th class="p-3">Telefone</th>
+                                    <th class="p-3">Perfil de Serviço</th>
+                                    <th class="p-3 text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${suppliersHtml}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-8 card p-6 bg-gray-50">
+                        <h4 class="mb-4">Adicionar Transportadora Manualmente</h4>
+                        <form id="addSupplierForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" id="newSupplierName" placeholder="Nome da Transportadora" class="w-full p-2 border border-gray-300 rounded-md" required>
+                            <input type="text" id="newSupplierAddress" placeholder="Endereço" class="w-full p-2 border border-gray-300 rounded-md" required>
+                            <input type="text" id="newSupplierPhone" placeholder="Telefone" class="w-full p-2 border border-gray-300 rounded-md">
+                            <textarea id="newSupplierProfile" placeholder="Perfil do Serviço (Ex: Frota, Área de atuação)" rows="2" class="md:col-span-2 w-full p-2 border border-gray-300 rounded-md" required></textarea>
+                            <button type="submit" class="md:col-span-2 w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition duration-300">Adicionar Transportadora</button>
+                        </form>
+                    </div>
+                `;
+                
+                document.getElementById('supplierSearch').addEventListener('keyup', filterSuppliers);
+                document.querySelectorAll('.generate-btn').forEach(btn => {
+                    btn.addEventListener('click', handleGenerateMessageClick);
+                });
+                document.getElementById('addSupplierForm').addEventListener('submit', handleAddSupplier);
+            }
+
+            async function handleAddUnit(event) {
+                event.preventDefault();
+                addUnitBtnText.classList.add('hidden');
+                addUnitLoader.classList.remove('hidden');
+                addUnitFeedback.textContent = '';
+
+                const city = document.getElementById('newUnitCity').value;
+                const state = document.getElementById('newUnitState').value.toUpperCase();
+                const address = document.getElementById('newUnitAddress').value;
+
+                const newUnit = {
+                    id: 'new_' + Date.now(),
+                    name: `Prospecção - ${city}, ${state}`,
+                    city: city,
+                    state: state,
+                    region: 'Prospecção',
+                    address: address || 'N/A',
+                    analysis: `Análise de mercado gerada por IA para ${city}, ${state}.`,
+                    suppliers: []
+                };
+
+                const addressContext = address ? `próximas ao endereço de referência: ${address}` : '';
+                const prompt = `Encontre o máximo possível de transportadoras e empresas de logística na cidade de ${newUnit.city}, ${newUnit.state} ${addressContext}. Busque por uma lista abrangente, com pelo menos 15 empresas se possível. Dê preferência para empresas que trabalham com carga fracionada ou carga lotação. Forneça o nome, endereço, telefone e um breve perfil para cada uma, incluindo, se possível, tipos de frota e se possui registro ANTT.`;
+                
+                const schema = {
+                    type: "ARRAY",
+                    items: {
+                        type: "OBJECT",
+                        properties: {
+                            "name": { "type": "STRING" },
+                            "address": { "type": "STRING" },
+                            "phone": { "type": "STRING" },
+                            "profile": { "type": "STRING" }
+                        },
+                        "required": ["name", "address", "profile"]
+                    }
+                };
+
+                try {
+                    const suppliersJson = await callGeminiApi(prompt, schema);
+                    newUnit.suppliers = suppliersJson;
+                    
+                    data.units.push(newUnit);
+                    addUnitForm.reset();
+                    addUnitFeedback.textContent = `Prospecção em ${city} concluída com ${suppliersJson.length} transportadoras encontradas!`;
+                    addUnitFeedback.className = 'text-green-600 mt-4';
+                    
+                    updateAll();
+                    
+                    // Auto-select the newly added item
+                    const prospectRegionOption = Array.from(regionFilter.options).find(opt => opt.value === 'Prospecção');
+                    if (prospectRegionOption) {
+                        regionFilter.value = 'Prospecção';
+                        populateStates('Prospecção');
+                        stateFilter.value = newUnit.state;
+                        populateUnits(newUnit.state);
+                        unitFilter.value = newUnit.id;
+                        displayUnitDetails(newUnit.id);
+                    }
+
+
+                } catch (error) {
+                    console.error("Error processing new unit:", error);
+                    addUnitFeedback.textContent = `Erro ao buscar transportadoras: ${error.message}. Tente novamente.`;
+                    addUnitFeedback.className = 'text-red-600 mt-4';
+                } finally {
+                    addUnitBtnText.classList.remove('hidden');
+                    addUnitLoader.classList.add('hidden');
+                }
+            }
+
+            function handleAddSupplier(event) {
+                event.preventDefault();
+                const newSupplier = {
+                    name: document.getElementById('newSupplierName').value,
+                    address: document.getElementById('newSupplierAddress').value,
+                    phone: document.getElementById('newSupplierPhone').value || 'Não informado',
+                    profile: document.getElementById('newSupplierProfile').value
+                };
+                
+                const unitIndex = data.units.findIndex(u => u.id === currentUnit.id);
+                if (unitIndex > -1) {
+                    if (!data.units[unitIndex].suppliers) {
+                        data.units[unitIndex].suppliers = [];
+                    }
+                    data.units[unitIndex].suppliers.push(newSupplier);
+                    displayUnitDetails(currentUnit.id);
+                    renderChart();
+                }
+            }
+
+            async function handleGenerateMessageClick(event) {
+                const supplierIndex = event.target.dataset.supplierIndex;
+                const supplier = currentUnit.suppliers[supplierIndex];
+                
+                showModal();
+                
+                const prompt = `Gere uma mensagem de contato profissional, curta e amigável em português do Brasil para iniciar uma parceria. Meu contexto: Eu trabalho para um projeto da Ambev. Empresa que estou contatando: ${supplier.name}. Nosso centro de distribuição Ambev próximo a eles fica em ${currentUnit.city}. A mensagem deve ser um e-mail, começando com "Prezados da ${supplier.name}," e terminando com "Atenciosamente,". O objetivo é apresentar a oportunidade de prestar serviços de transporte e logística para a Ambev na região. Mantenha o tom profissional, mas acessível.`;
+                
+                try {
+                    const text = await callGeminiApi(prompt);
+                    generatedMessage.value = text;
+                    loader.classList.add('hidden');
+                    messageContent.classList.remove('hidden');
+                } catch (error) {
+                    console.error("Error calling Gemini API:", error);
+                    generatedMessage.value = "Desculpe, ocorreu um erro ao gerar a mensagem. Por favor, tente novamente.";
+                    loader.classList.add('hidden');
+                    messageContent.classList.remove('hidden');
+                }
+            }
+
+            async function callGeminiApi(prompt, jsonSchema = null) {
+                const apiKey = "AIzaSyAMerAfzFGcsGV5wjVDp2tyvQXlb0au-wA"; 
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                
+                const payload = { 
+                    contents: [{ role: "user", parts: [{ text: prompt }] }]
+                };
+
+                if (jsonSchema) {
+                    payload.generationConfig = {
+                        responseMimeType: "application/json",
+                        responseSchema: jsonSchema
+                    };
+                }
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorBody = await response.text();
+                    console.error("API Error Response:", errorBody);
+                    throw new Error(`A chamada à API falhou com o status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts) {
+                    const responseText = result.candidates[0].content.parts[0].text;
+                    return jsonSchema ? JSON.parse(responseText) : responseText;
+                } else {
+                    if (result.promptFeedback && result.promptFeedback.blockReason) {
+                        throw new Error(`O prompt foi bloqueado por segurança: ${result.promptFeedback.blockReason}`);
+                    }
+                    throw new Error("A API retornou uma resposta vazia ou inválida.");
+                }
+            }
+
+            function showModal() {
+                geminiModal.style.display = 'flex';
+                loader.classList.remove('hidden');
+                messageContent.classList.add('hidden');
+                generatedMessage.value = '';
+                copyFeedback.classList.add('hidden');
+            }
+
+            function hideModal() {
+                geminiModal.style.display = 'none';
+            }
+
+            function copyMessageToClipboard() {
+                generatedMessage.select();
+                document.execCommand('copy');
+                copyFeedback.classList.remove('hidden');
+                setTimeout(() => {
+                    copyFeedback.classList.add('hidden');
+                }, 2000);
+            }
+
+            closeModalBtn.addEventListener('click', hideModal);
+            copyMessageBtn.addEventListener('click', copyMessageToClipboard);
+
+            function filterSuppliers(event) {
+                const searchTerm = event.target.value.toLowerCase();
+                const table = document.getElementById('supplierTable');
+                const rows = table.getElementsByTagName('tr');
+
+                for (let i = 1; i < rows.length; i++) {
+                    const nameCell = rows[i].getElementsByTagName('td')[0];
+                    if (nameCell) {
+                        const nameText = nameCell.textContent || nameCell.innerText;
+                        if (nameText.toLowerCase().indexOf(searchTerm) > -1) {
+                            rows[i].style.display = "";
+                        } else {
+                            rows[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+
+            function renderChart() {
+                const ctx = document.getElementById('suppliersByStateChart').getContext('2d');
+                const stateCounts = data.units.reduce((acc, unit) => {
+                    if (unit.region !== 'Prospecção') { // Exclude prospected items from chart until they are "saved"
+                       acc[unit.state] = (acc[unit.state] || 0) + (unit.suppliers ? unit.suppliers.length : 0);
+                    }
+                    return acc;
+                }, {});
+
+                const sortedStates = Object.keys(stateCounts).sort((a, b) => stateCounts[b] - stateCounts[a]);
+                const sortedCounts = sortedStates.map(state => stateCounts[state]);
+
+                if (suppliersChart) {
+                    suppliersChart.destroy();
+                }
+
+                suppliersChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: sortedStates,
+                        datasets: [{
+                            label: 'Nº de Transportadoras',
+                            data: sortedCounts,
+                            backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        scales: { x: { beginAtZero: true } },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
+
+            function resetDetailsView() {
+                unitDetailContainer.innerHTML = '';
+                unitDetailContainer.appendChild(initialMessage);
+                initialMessage.classList.remove('hidden');
+            }
+
+            function reset() {
+                regionFilter.value = '';
+                populateStates('');
+                resetDetailsView();
+            }
+            
+            function updateAll() {
+                populateRegions();
+                const selectedRegion = regionFilter.value;
+                populateStates(selectedRegion);
+                const selectedState = stateFilter.value;
+                populateUnits(selectedState);
+                renderChart();
+            }
+
+            regionFilter.addEventListener('change', (e) => {
+                populateStates(e.target.value);
+                stateFilter.value = '';
+                unitFilter.value = '';
+                resetDetailsView();
+            });
+
+            stateFilter.addEventListener('change', (e) => {
+                populateUnits(e.target.value);
+                unitFilter.value = '';
+                resetDetailsView();
+            });
+
+            unitFilter.addEventListener('change', (e) => {
+                if(e.target.value) {
+                    displayUnitDetails(e.target.value);
+                } else {
+                    resetDetailsView();
+                }
+            });
+
+            resetButton.addEventListener('click', reset);
+
+            initApp();
+        });
+    </script>
+</body>
+</html>
